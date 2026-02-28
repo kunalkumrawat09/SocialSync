@@ -1,90 +1,162 @@
-# SocialSync - Automated Social Media Content Manager
+# 🚀 SocialSync - Automated Social Media Content Manager
 
-**Automated content posting to Instagram Reels & YouTube from Google Drive**
+> Automate your social media content posting from Google Drive to Instagram Reels & YouTube
 
----
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat&logo=nestjs&logoColor=white)](https://nestjs.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+
+## 📋 Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [API Documentation](#api-documentation)
+- [Screenshots](#screenshots)
+- [Contributing](#contributing)
+- [License](#license)
+
+## 🎯 Overview
+
+SocialSync is a powerful automation tool that seamlessly integrates with Google Drive to discover video content and automatically posts it to multiple social media platforms. Perfect for content creators, marketing teams, and media companies who want to streamline their social media workflow.
+
+### Why SocialSync?
+
+- ⏰ **Save Time** - Automate repetitive posting tasks
+- 📈 **Scale Content** - Post to multiple platforms simultaneously
+- 🔄 **Stay Consistent** - Schedule posts for optimal engagement
+- 🎯 **Multi-Platform** - Instagram Reels & YouTube (more coming soon)
+- 🔒 **Secure** - AES-256-GCM encrypted OAuth tokens
+
+## ✨ Features
+
+### 🎬 Content Management
+- **Google Drive Integration** - Automatic video discovery from Drive folders
+- **Smart Scanning** - Periodic folder scans for new content
+- **Status Tracking** - Monitor content status (pending, queued, posted, failed)
+- **Search & Filter** - Quickly find content by filename or status
+
+### 📱 Multi-Platform Publishing
+- **Instagram Reels** - Automated Reels posting with resumable uploads
+- **YouTube** - Native scheduling with YouTube Data API v3
+- **Chunked Uploads** - Handle large files with 5MB chunk uploads
+- **Retry Logic** - Automatic retry on failed posts
+
+### ⏰ Intelligent Scheduling
+- **Custom Schedules** - Set posting days and times
+- **Platform-Specific** - Different schedules for each platform
+- **Queue Management** - View and manage upcoming posts
+- **Background Workers** - Cron-based automated processing
+
+### 📊 Dashboard & Analytics
+- **Real-time Stats** - Content count, pending posts, posted count
+- **Activity Feed** - Complete audit log of all actions
+- **Status Badges** - Visual indicators for post status
+- **Platform Filters** - Filter queue by platform or status
+
+### 🔐 Security & Multi-Tenancy
+- **OAuth 2.0** - Secure authentication with Google, Instagram, YouTube
+- **Token Encryption** - AES-256-GCM encrypted credentials
+- **Multi-User** - Complete data isolation per user
+- **CORS Ready** - Secure API with CORS configuration
+
+## 🛠 Tech Stack
+
+### Backend
+- **Framework:** NestJS (Node.js)
+- **Database:** MongoDB with MikroORM
+- **Authentication:** OAuth 2.0 (Google, Instagram, YouTube)
+- **Encryption:** AES-256-GCM
+- **Scheduling:** @nestjs/schedule (Cron jobs)
+- **Queue:** Bull (Redis-based)
+
+### Frontend
+- **Framework:** Next.js 14 (React 18)
+- **UI Library:** Radix UI + TailwindCSS
+- **HTTP Client:** ky
+- **Validation:** Zod
+- **State Management:** React Hooks
+
+### APIs & Services
+- **Google Drive API** - File listing and downloads
+- **Instagram Graph API** - Reels posting
+- **YouTube Data API v3** - Video uploads and scheduling
 
 ## 📁 Project Structure
 
 ```
 socialsync/
-├── backend/              # NestJS Backend Module
+├── backend/
 │   └── socialsync/
-│       ├── controllers/  # REST API endpoints (6 controllers)
-│       ├── services/     # Business logic (8 services)
-│       ├── entities/     # MongoDB schemas (6 entities)
-│       ├── workers/      # Background jobs (2 workers)
-│       └── interfaces/   # TypeScript interfaces
+│       ├── controllers/           # REST API endpoints (6)
+│       │   ├── auth.controller.ts
+│       │   ├── channels.controller.ts
+│       │   ├── content.controller.ts
+│       │   ├── queue.controller.ts
+│       │   ├── schedule.controller.ts
+│       │   └── stats.controller.ts
+│       │
+│       ├── services/              # Business logic (8)
+│       │   ├── activity.service.ts
+│       │   ├── drive.service.ts
+│       │   ├── instagram.service.ts
+│       │   ├── oauth.service.ts
+│       │   ├── posting.service.ts
+│       │   ├── queue.service.ts
+│       │   ├── schedule.service.ts
+│       │   └── youtube.service.ts
+│       │
+│       ├── entities/              # MongoDB schemas (6)
+│       │   ├── activity.entity.ts
+│       │   ├── content-item.entity.ts
+│       │   ├── oauth-token.entity.ts
+│       │   ├── queue-item.entity.ts
+│       │   ├── schedule.entity.ts
+│       │   └── youtube-channel.entity.ts
+│       │
+│       ├── workers/               # Background jobs (2)
+│       │   ├── content-scanner.worker.ts
+│       │   └── posting.worker.ts
+│       │
+│       └── interfaces/
+│           └── publisher.interface.ts
 │
-├── frontend/             # Next.js Frontend
-│   ├── pages/           # UI pages (5 pages)
-│   │   ├── page.tsx            # Dashboard
-│   │   ├── content/            # Content Library
-│   │   ├── queue/              # Queue Management
-│   │   ├── schedule/           # Schedule Manager
-│   │   ├── channels/           # YouTube Channels
-│   │   └── settings/           # Settings & OAuth
-│   └── socialsync.ts    # API Client
+├── frontend/
+│   ├── pages/                     # Next.js pages (6)
+│   │   ├── page.tsx              # Dashboard
+│   │   ├── channels/             # YouTube Channels
+│   │   ├── content/              # Content Library
+│   │   ├── queue/                # Queue Management
+│   │   ├── schedule/             # Schedule Manager
+│   │   └── settings/             # Settings & OAuth
+│   │
+│   └── socialsync.ts             # API Client
 │
-└── docs/                # Documentation
-    ├── SOCIALSYNC_TESTING_GUIDE.md
-    ├── SOCIALSYNC_MIGRATION_COMPLETE.md
-    └── ARCHITECTURE_CLARIFICATION.md
+├── docs/                          # Documentation
+│   ├── SOCIALSYNC_TESTING_GUIDE.md
+│   ├── SOCIALSYNC_MIGRATION_COMPLETE.md
+│   └── ARCHITECTURE_CLARIFICATION.md
+│
+└── README.md
 ```
 
----
+## 🚀 Getting Started
 
-## 🚀 Features
+### Prerequisites
 
-### Content Management
-- **Google Drive Integration** - Automatic video discovery
-- **Multi-Platform Support** - Instagram Reels & YouTube
-- **Queue System** - Track pending, processing, posted content
-- **Scheduling** - Set posting times and days
-
-### Platform Features
-- **Instagram Reels** - Resumable uploads with chunking
-- **YouTube** - Native scheduling, multiple channels
-- **OAuth Security** - AES-256-GCM encrypted tokens
-- **Multi-Tenant** - Full user isolation
-
-### Automation
-- **Background Workers** - Hourly content scanning
-- **Auto Posting** - Minute-based queue processing
-- **Retry Logic** - Automatic retry on failures
-- **Activity Logging** - Complete audit trail
-
----
-
-## 🛠 Tech Stack
-
-**Backend:**
-- NestJS (Node.js framework)
-- MongoDB + MikroORM
-- OAuth 2.0 (Google, Instagram, YouTube)
-- AES-256-GCM encryption
-- Cron-based workers
-
-**Frontend:**
-- Next.js 14 (React 18)
-- TailwindCSS
-- Radix UI components
-- ky HTTP client
-- TypeScript
-
----
-
-## 📋 Requirements
-
-- Node.js 18+
-- MongoDB
+- Node.js 18+ and npm/yarn
+- MongoDB instance
 - Google OAuth credentials
 - Instagram App credentials
 - YouTube API key
 
----
+### Environment Variables
 
-## ⚙️ Environment Variables
+Create a `.env` file:
 
 ```env
 # MongoDB
@@ -103,144 +175,137 @@ INSTAGRAM_REDIRECT_URI=http://localhost:3001/api/socialsync/auth/instagram/callb
 # YouTube
 YOUTUBE_API_KEY=your-api-key
 
-# Security
-OAUTH_ENCRYPTION_KEY=64-character-hex-string
+# Security (generate with: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
+OAUTH_ENCRYPTION_KEY=your-64-character-hex-string
 
 # URLs
 API_BASE_URL=http://localhost:3001
 FRONTEND_URL=http://localhost:3000
 ```
 
----
+### Installation
 
-## 🔧 Integration
+```bash
+# Clone the repository
+git clone https://github.com/kunalkumrawat09/SocialSync.git
+cd SocialSync
 
-This module is designed to integrate into existing NestJS + Next.js applications:
+# Install backend dependencies
+cd backend
+npm install
 
-### Backend Integration
-1. Copy `backend/socialsync/` to your NestJS `src/` directory
-2. Add `SocialsyncModule` to your `app.module.ts` imports
-3. Configure environment variables
-4. Run migrations if needed
+# Install frontend dependencies
+cd ../frontend
+npm install
+```
 
-### Frontend Integration
-1. Copy `frontend/pages/` to your Next.js `app/` directory
-2. Copy `frontend/socialsync.ts` to your API client directory
-3. Configure API base URL
-4. Add navigation links
+### Running the Application
 
----
+```bash
+# Start backend
+cd backend
+npm run start:dev
 
-## 📊 API Endpoints
+# Start frontend (in another terminal)
+cd frontend
+npm run dev
+```
 
-### Content
-- `GET /api/socialsync/content` - List content
-- `POST /api/socialsync/content/scan` - Scan Drive folder
+Access the dashboard at `http://localhost:3000/socialsync`
 
-### Queue
-- `GET /api/socialsync/queue` - List queue items
-- `POST /api/socialsync/queue` - Add to queue
-- `PATCH /api/socialsync/queue/:id/status` - Update status
-- `DELETE /api/socialsync/queue/:id` - Remove item
+## 📚 API Documentation
 
-### Schedule
-- `GET /api/socialsync/schedule` - List schedules
-- `POST /api/socialsync/schedule` - Create/update schedule
-- `DELETE /api/socialsync/schedule/:id` - Delete schedule
+### Content Endpoints
 
-### Channels
-- `GET /api/socialsync/channels` - List YouTube channels
-- `POST /api/socialsync/channels/fetch` - Sync from YouTube
-- `PATCH /api/socialsync/channels/:id` - Update settings
-- `DELETE /api/socialsync/channels/:id` - Remove channel
+```http
+GET    /api/socialsync/content          # List all content
+POST   /api/socialsync/content/scan     # Scan Drive folder
+```
 
-### Auth
-- `POST /api/socialsync/auth/token` - Save OAuth token
-- `GET /api/socialsync/auth/status` - Check status
-- `DELETE /api/socialsync/auth/:platform` - Disconnect
+### Queue Endpoints
 
-### Stats
-- `GET /api/socialsync/stats/dashboard` - Dashboard stats
+```http
+GET    /api/socialsync/queue            # List queue items
+POST   /api/socialsync/queue            # Add to queue
+PATCH  /api/socialsync/queue/:id/status # Update status
+DELETE /api/socialsync/queue/:id        # Remove item
+```
 
----
+### Schedule Endpoints
 
-## 🧪 Testing
+```http
+GET    /api/socialsync/schedule         # List schedules
+POST   /api/socialsync/schedule         # Create/update
+DELETE /api/socialsync/schedule/:id     # Delete schedule
+```
 
-See `docs/SOCIALSYNC_TESTING_GUIDE.md` for comprehensive testing instructions covering:
-- API endpoint testing
-- OAuth flow testing
-- Frontend testing
-- End-to-end testing
-- Performance testing
+### Channel Endpoints
 
----
+```http
+GET    /api/socialsync/channels          # List YouTube channels
+POST   /api/socialsync/channels/fetch    # Sync from YouTube
+PATCH  /api/socialsync/channels/:id      # Update settings
+DELETE /api/socialsync/channels/:id      # Remove channel
+```
 
-## 📚 Documentation
+### Auth Endpoints
 
-- **Testing Guide:** `docs/SOCIALSYNC_TESTING_GUIDE.md`
-- **Migration Guide:** `docs/SOCIALSYNC_MIGRATION_COMPLETE.md`
-- **Architecture:** `docs/ARCHITECTURE_CLARIFICATION.md`
+```http
+POST   /api/socialsync/auth/token        # Save OAuth token
+GET    /api/socialsync/auth/status       # Check status
+DELETE /api/socialsync/auth/:platform    # Disconnect
+```
 
----
+### Stats Endpoints
 
-## 🔒 Security
+```http
+GET    /api/socialsync/stats/dashboard   # Dashboard stats
+```
 
-- OAuth tokens encrypted with AES-256-GCM
-- Multi-tenant data isolation
-- Secure token refresh
-- API rate limiting ready
-- CORS configured
+## 🖼️ Screenshots
 
----
+### Dashboard
+*Coming soon - Screenshot of main dashboard with stats cards*
+
+### Content Library
+*Coming soon - Screenshot of content library with Drive scan*
+
+### Queue Management
+*Coming soon - Screenshot of queue with status filtering*
 
 ## 🎯 Use Cases
 
-1. **Content Creators** - Auto-post Drive videos to Instagram/YouTube
-2. **OTT Platforms** - Sync content to social media
-3. **Marketing Teams** - Schedule social media campaigns
-4. **Media Companies** - Distribute content across platforms
+- **Content Creators** - Auto-post Drive videos to Instagram/YouTube
+- **Marketing Teams** - Schedule social media campaigns
+- **Media Companies** - Distribute content across platforms
+- **OTT Platforms** - Sync content to social media
 
----
+## 🗺️ Roadmap
 
-## 📦 Deployment
+- [ ] TikTok integration
+- [ ] Twitter/X video posting
+- [ ] Facebook Reels support
+- [ ] LinkedIn video posts
+- [ ] Analytics dashboard
+- [ ] A/B testing for content
+- [ ] AI-powered caption generation
+- [ ] Hashtag research tool
+- [ ] Engagement tracking
 
-### Backend
-```bash
-# Install dependencies
-npm install
+## 🤝 Contributing
 
-# Build
-npm run build
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-# Start
-npm run start:prod
-```
+## 📄 License
 
-### Frontend
-```bash
-# Install dependencies
-npm install
+This project is private and proprietary.
 
-# Build
-npm run build
+## 👨‍💻 Author
 
-# Start
-npm run start
-```
-
----
-
-## 🤝 Support
-
-- GitHub: https://github.com/kunalkumrawat09
+**Kunal Kumrawat**
+- GitHub: [@kunalkumrawat09](https://github.com/kunalkumrawat09)
 - Email: kunal@stage.in
 
 ---
 
-## 📄 License
-
-Private Project - All Rights Reserved
-
----
-
-**Built by Kunal Kumrawat**
+<p align="center">Made with ❤️ for automating social media</p>
